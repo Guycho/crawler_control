@@ -20,8 +20,8 @@ class Control {
     // TODO: Add your member functions here
 
    private:
-    SteeringMotor m_steering_motors[4];
-    WheelMotor m_wheel_motors[4];
+    SteeringMotor m_steering_motors[Config::num_steering];
+    WheelMotor m_wheel_motors[Config::num_wheels];
     uint8_t m_steering_mode;
     uint8_t m_speed_mode;
     // TODO: Add your member variables here
