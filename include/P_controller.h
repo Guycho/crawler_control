@@ -2,7 +2,7 @@
 #define P_CONTROLLER_H
 
 struct PControllerConfig {
-    float controller_Kp;
+    float Kp;
     float max_output;
     };
 

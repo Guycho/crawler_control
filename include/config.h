@@ -28,5 +28,12 @@ namespace controller {
 const float Kp[4] = {0.1, 0.1, 0.1, 0.1};
 const float max_output[4] = {1, 1, 1, 1};
 }  // namespace controller
+namespace wheel {
+const float max_speed_pct[4] = {100, 100, 100, 100};
+}  // namespace wheel
+namespace steering {
+const float max_angle[4] = {90, 90, 90, 90};
+const float max_speed_pct[4] = {100, 100, 100, 100};
+}  // namespace steering
 }  // namespace config
 #endif  // CONFIG_H

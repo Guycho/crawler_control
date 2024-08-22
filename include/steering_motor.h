@@ -6,14 +6,9 @@
 #include "rotational_encoder.h"
 
 struct SteeringMotorConfig {
-    uint8_t servo_pin;
-    uint16_t servo_min_pulse;
-    uint16_t servo_max_pulse;
-    uint8_t encoder_pin;
-    bool encoder_reset;
-    float encoder_offset;
-    float controller_Kp;
-    float controller_max_output;
+    BrushedMotorConfig motor_config;
+    RotationalEncoderConfig encoder_config;
+    PControllerConfig controller_config;
     float max_angle;
     float max_speed_pct;
 };

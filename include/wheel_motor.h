@@ -5,9 +5,7 @@
 #include "config.h"
 
 struct WheelMotorConfig {
-    uint8_t servo_pin;
-    uint16_t servo_min_pulse;
-    uint16_t servo_max_pulse;
+    BrushedMotorConfig motor_config;
     float max_speed_pct;
 };
 
