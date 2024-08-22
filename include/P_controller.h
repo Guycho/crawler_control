@@ -1,6 +1,8 @@
 #ifndef P_CONTROLLER_H
 #define P_CONTROLLER_H
 
+#include <Arduino.h>
+
 struct PControllerConfig {
     float Kp;
     float max_output;
