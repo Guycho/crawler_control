@@ -4,7 +4,7 @@
 #include "P_controller.h"
 #include "brushed_motor.h"
 #include "rotational_encoder.h"
-
+#include "utils.h"
 struct SteeringMotorConfig {
     BrushedMotorConfig motor_config;
     RotationalEncoderConfig encoder_config;
@@ -19,7 +19,7 @@ class SteeringMotor {
     ~SteeringMotor();  // Destructor
 
     void init(const SteeringMotorConfig& config);
-    void setAngle();  // Method to set angle
+    void setAngle(float angle);  // Method to set angle
     void stop();      // Method to stop the motor
     void run();       // Method to run the motor
 
@@ -27,6 +27,14 @@ class SteeringMotor {
     BrushedMotor m_motor;         // Variable to store the motor
     RotationalEncoder m_encoder;  // Variable to store the encoder
     PController m_controller;     // Variable to store the controller
+
+    void setSpeedPct(float speed_pct);
+
+    float m_max_speed_pct;  // Variable to store the motor max speed
+    float max_angle;
+    float m_des_angle;
+    uint16_t m_max_pulse;
+    uint16_t m_min_pulse;
 };
 
 #endif  // STEERING_MOTOR_H

@@ -2,7 +2,7 @@
 #define WHEEL_MOTOR_H
 
 #include "brushed_motor.h"
-#include "config.h"
+#include "utils.h"
 
 struct WheelMotorConfig {
     BrushedMotorConfig motor_config;
@@ -15,15 +15,16 @@ class WheelMotor {
     ~WheelMotor();  // Destructor
 
     void init(const WheelMotorConfig& config);  // Method to start the motor
-    void setSpeedPct(int speed_pct);            // Method to set the motor speed percentage
-    void start();
+    void setSpeedPct(float speed_pct);            // Method to set the motor speed percentage
     void stop();
 
    private:
     BrushedMotor m_motor;  // Variable to store the motor
 
-    int m_speed_pct;        // Variable to store the motor speed percentage
     float m_max_speed_pct;  // Variable to store the motor max speed
+    uint16_t m_max_pulse;
+    uint16_t m_min_pulse;
+    
 };
 
 #endif  // WHEEL_MOTOR_H

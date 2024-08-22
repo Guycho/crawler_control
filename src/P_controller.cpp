@@ -9,6 +9,6 @@ void PController::init(const PControllerConfig& config) {
 }
 float PController::calculateOutput(float error) {
     float output = m_kp * error;
-    output = constrain(output, -m_max_output, m_max_output);
+    output = Utils::Calcs::constrain_float(output, -m_max_output, m_max_output);
     return output;
 }

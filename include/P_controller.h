@@ -2,6 +2,7 @@
 #define P_CONTROLLER_H
 
 #include <Arduino.h>
+#include "utils.h"
 
 struct PControllerConfig {
     float Kp;

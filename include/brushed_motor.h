@@ -19,6 +19,6 @@ class BrushedMotor {
 
    private:
     Servo m_servo_output;  // Variable to store the motor
-};
+    };
 
 #endif  // BRUSHED_MOTOR_H
