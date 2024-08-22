@@ -4,16 +4,29 @@
 #include <Arduino.h>
 
 namespace config {
-    //general config
-    const uint8_t num_wheels = 4;
-    const uint8_t num_steering = 4;
-    //pwm pins for esc and steering
-    namespace esc_pin {
-        const uint8_t wheels_pwm[4] = {2, 3, 4, 5};
-        const uint8_t steering_pwm[4] = {6, 7, 8, 9};
-    }
-    namespace encoder_pin {
-        const uint8_t steering_encoder[4] = {14, 15, 16, 17};
-    }
-}
+const uint8_t num_wheels = 4;
+const uint8_t num_steering = 4;
+
+namespace esc {
+namespace wheel {
+const uint8_t pin[4] = {2, 3, 4, 5};
+const uint16_t min_pulse[4] = {1000, 1000, 1000, 1000};
+const uint16_t max_pulse[4] = {2000, 2000, 2000, 2000};
+}  // namespace wheel
+namespace steering {
+const uint8_t pin[4] = {2, 3, 4, 5};
+const uint16_t min_pulse[4] = {1000, 1000, 1000, 1000};
+const uint16_t max_pulse[4] = {2000, 2000, 2000, 2000};
+}  // namespace steering
+}  // namespace esc
+namespace encoder {
+const uint8_t pin[4] = {10, 11, 12, 13};
+const bool reverse[4] = {false, false, false, false};
+const float offset[4] = {0, 0, 0, 0};
+}  // namespace encoder
+namespace controller {
+const float Kp[4] = {0.1, 0.1, 0.1, 0.1};
+const float max_output[4] = {1, 1, 1, 1};
+}  // namespace controller
+}  // namespace config
 #endif  // CONFIG_H
