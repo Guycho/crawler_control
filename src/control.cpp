@@ -1,0 +1,108 @@
+#include "control.h"
+
+Control::Control() {}
+Control::~Control() {}
+
+void Control::init(const ControlConfig &config) {
+    for (int i = 0; i < Config::num_steering; i++) {
+        m_steering_motors[i] = *config.steering_motors[i];
+    }
+    for (int i = 0; i < Config::num_wheels; i++) {
+        m_wheel_motors[i] = *config.wheel_motors[i];
+    }
+    m_arm_enabled = false;
+    float m_throttle = 0;
+    float m_steering = 0;
+}
+void Control::run() {
+    if (get_arm_toggle()) {
+        m_arm_enabled = !m_arm_enabled;
+    }
+    if (get_steering_mode_toggle()) {
+        m_steering_mode = (m_steering_mode + 1) % NUM_STEERING_MODES;
+    }
+    if (get_throttle_mode_toggle()) {
+        m_throttle_mode = (m_throttle_mode + 1) % NUM_THROTTLE_MODES;
+    }
+    m_steering = get_steering();
+    m_throttle = get_throttle();
+    steering_state_machine_run(m_arm_enabled, m_steering, m_steering_mode);
+    throttle_state_machine_run(m_arm_enabled, m_throttle, m_throttle_mode);
+}
+
+void Control::steering_state_machine_run(bool arm_enabled, float steering, uint8_t steering_mode) {
+    if (arm_enabled) {
+        switch (steering_mode) {
+            case FRONT:
+                m_steering_motors[FR].setAngle(steering);
+                m_steering_motors[FL].setAngle(steering);
+                m_steering_motors[RR].setAngle(0);
+                m_steering_motors[RL].setAngle(0);
+                break;
+            case REAR:
+                m_steering_motors[FR].setAngle(0);
+                m_steering_motors[FL].setAngle(0);
+                m_steering_motors[RR].setAngle(-steering);
+                m_steering_motors[RL].setAngle(-steering);
+                break;
+            case ALL:
+                m_steering_motors[FR].setAngle(steering);
+                m_steering_motors[FL].setAngle(steering);
+                m_steering_motors[RR].setAngle(-steering);
+                m_steering_motors[RL].setAngle(-steering);
+                break;
+            case CRAB:
+                m_steering_motors[FR].setAngle(steering);
+                m_steering_motors[FL].setAngle(steering);
+                m_steering_motors[RR].setAngle(steering);
+                m_steering_motors[RL].setAngle(steering);
+                break;
+            case S_PIVOT:
+                m_steering_motors[FR].setAngle(-45);
+                m_steering_motors[FL].setAngle(45);
+                m_steering_motors[RR].setAngle(45);
+                m_steering_motors[RL].setAngle(-45);
+                break;
+        }
+    } else {
+        m_steering_motors[FR].setAngle(0);
+        m_steering_motors[FL].setAngle(0);
+        m_steering_motors[RR].setAngle(0);
+        m_steering_motors[RL].setAngle(0);
+    }
+}
+void Control::throttle_state_machine_run(bool arm_enabled, float throttle, uint8_t throttle_mode) {
+    if (arm_enabled) {
+        switch (throttle_mode) {
+            case FWD:
+                m_wheel_motors[FR].setSpeedPct(throttle);
+                m_wheel_motors[FL].setSpeedPct(throttle);
+                m_wheel_motors[RR].setSpeedPct(0);
+                m_wheel_motors[RL].setSpeedPct(0);
+                break;
+            case RWD:
+                m_wheel_motors[FR].setSpeedPct(0);
+                m_wheel_motors[FL].setSpeedPct(0);
+                m_wheel_motors[RR].setSpeedPct(throttle);
+                m_wheel_motors[RL].setSpeedPct(throttle);
+                break;
+            case AWD:
+                m_wheel_motors[FR].setSpeedPct(throttle);
+                m_wheel_motors[FL].setSpeedPct(throttle);
+                m_wheel_motors[RR].setSpeedPct(throttle);
+                m_wheel_motors[RL].setSpeedPct(throttle);
+                break;
+            case T_PIVOT:
+                m_wheel_motors[FR].setSpeedPct(throttle);
+                m_wheel_motors[FL].setSpeedPct(-throttle);
+                m_wheel_motors[RR].setSpeedPct(throttle);
+                m_wheel_motors[RL].setSpeedPct(-throttle);
+                break;
+        }
+    } else {
+        m_wheel_motors[FR].setSpeedPct(0);
+        m_wheel_motors[FL].setSpeedPct(0);
+        m_wheel_motors[RR].setSpeedPct(0);
+        m_wheel_motors[RL].setSpeedPct(0);
+    }
+}
