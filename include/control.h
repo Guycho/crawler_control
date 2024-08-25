@@ -5,8 +5,8 @@
 #include "steering_motor.h"
 #include "wheel_motor.h"
 
-enum SteeringMode { FRONT = 0, REAR = 1, ALL = 2, CRAB = 3, S_PIVOT = 4 };
-enum ThrottleMode { FWD = 0, RWD = 1, AWD = 2, T_PIVOT = 3 };
+enum SteeringMode { ALL = 0, FRONT = 1, REAR = 2, CRAB = 3, S_PIVOT = 4 };
+enum ThrottleMode { AWD = 0, FWD = 1, RWD = 2, T_PIVOT = 3 };
 enum POSITIONS { FR = 0, RR = 1, RL = 2, FL = 3 };
 
 struct ControlConfig {

@@ -23,6 +23,7 @@ float calc_dead_band(float x, float max_output, float dead_band) {
     float scaled_temp = sign * abs_temp;
     return scaled_temp;
 }
+float milli_to_single(float x) { return x / 1e3; }
 
 }  // namespace Calcs
 }  // namespace Utils
