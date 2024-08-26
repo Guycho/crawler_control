@@ -6,6 +6,8 @@ BrushedMotor::~BrushedMotor() {}  // Destructor definition
 void BrushedMotor::init(const BrushedMotorConfig &config) {
     m_servo_output.attach(config.pin, config.min_pulse,
       config.max_pulse);  // Attaching the motor to the pin and setting the min and max pulse
+      uint16_t init_pulse = (config.min_pulse + config.max_pulse) / 2;
+    m_servo_output.writeMicroseconds(init_pulse);  // Setting the motor speed to 0
 }  // Method to start the motor
 
 void BrushedMotor::setMicroSeconds(uint16_t micro_seconds) {

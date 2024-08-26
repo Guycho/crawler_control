@@ -10,11 +10,17 @@ void Control::init(const ControlConfig &config) {
     for (int i = 0; i < Config::num_wheels; i++) {
         m_wheel_motors[i] = *config.wheel_motors[i];
     }
+    for (int i = 0; i < Config::num_coilover; i++) {
+        m_coilover_adjusters[i] = *config.coilover_adjusters[i];
+        m_coilover_adjusters[i].reset();
+    }
+    m_mav_bridge = *config.mav_bridge;
     m_arm_enabled = false;
     float m_throttle = 0;
     float m_steering = 0;
 }
 void Control::run() {
+    
     if (get_arm_toggle()) {
         m_arm_enabled = !m_arm_enabled;
     }
@@ -24,6 +30,11 @@ void Control::run() {
     if (get_throttle_mode_toggle()) {
         m_throttle_mode = (m_throttle_mode + 1) % NUM_THROTTLE_MODES;
     }
+    if (get_coilover_mode_toggle()) {
+        m_coilover_mode = (m_coilover_mode + 1) % NUM_COILOVER_MODES;
+    }
+    m_mav_bridge.run();
+    m_inertial_data = m_mav_bridge.get_inertial_data();
     m_steering = get_steering();
     m_throttle = get_throttle();
     steering_state_machine_run(m_arm_enabled, m_steering, m_steering_mode);
@@ -104,5 +115,25 @@ void Control::throttle_state_machine_run(bool arm_enabled, float throttle, uint8
         m_wheel_motors[FL].setSpeedPct(0);
         m_wheel_motors[RR].setSpeedPct(0);
         m_wheel_motors[RL].setSpeedPct(0);
+    }
+}
+void Control::coilover_state_machine_run(bool arm_enabled, uint8_t coilover_mode) {
+    if (arm_enabled) {
+        switch (coilover_mode) {
+            case OFF:
+                for (int i = 0; i < Config::num_coilover; i++) {
+                    m_coilover_adjusters[i].reset();
+                }
+                break;
+            case STABILIZE:
+                for (int i = 0; i < Config::num_coilover; i++) {
+                    m_coilover_adjusters[i].setPos(m_coilover_pos[i]);
+                }
+                break;
+        }
+    } else {
+        for (int i = 0; i < Config::num_coilover; i++) {
+            m_coilover_adjusters[i].setPos(0);
+        }
     }
 }

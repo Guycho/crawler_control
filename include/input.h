@@ -19,6 +19,7 @@ float get_throttle();
 float get_steering();
 bool get_steering_mode_toggle();
 bool get_throttle_mode_toggle();
+bool get_coilover_mode_toggle();
 bool get_arm_toggle();
 
 

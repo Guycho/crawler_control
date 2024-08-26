@@ -6,6 +6,7 @@
 namespace Config {
 const uint8_t num_wheels = 4;
 const uint8_t num_steering = 4;
+const uint8_t num_coilover = 4;
 namespace Esc {
 namespace Wheel {
 extern const uint8_t pin[];
@@ -48,5 +49,11 @@ namespace PS4Controller {
 extern const char *mac;
 extern const float dead_band;
 }  // namespace PS4Controller
+namespace Coilover {
+extern const uint8_t pin[];
+extern const uint16_t min_pulse[];
+extern const uint16_t max_pulse[];
+extern const bool reverse[];
+} // namespace Coilover
 }  // namespace Config
 #endif  // CONFIG_H

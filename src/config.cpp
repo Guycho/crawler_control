@@ -43,4 +43,11 @@ namespace PS4Controller {
 const char *mac = "A0:DD:6C:03:9A:EE";
 const float dead_band = 5;
 }  // namespace PS4Controller
+namespace Coilover {
+const uint8_t pin[num_coilover] = {2, 3, 4, 5};
+const uint16_t min_pulse[num_coilover] = {1000, 1000, 1000, 1000};
+const uint16_t max_pulse[num_coilover] = {2000, 2000, 2000, 2000};
+const bool reverse[];
+}  // namespace Coilover
+
 }  // namespace Config

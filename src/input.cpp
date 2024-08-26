@@ -11,6 +11,7 @@ float m_throttle;
 float m_steering;
 bool m_steering_mode_toggle;
 bool m_throttle_mode_toggle;
+bool m_coilover_mode_toggle;
 bool m_arm_toggle;
 
 uint8_t m_dead_band;
@@ -36,6 +37,12 @@ bool get_steering_mode_toggle() {
 bool get_throttle_mode_toggle() {
     bool temp = m_throttle_mode_toggle;
     m_throttle_mode_toggle = false;
+    return temp;
+}
+
+bool get_coilover_mode_toggle() {
+    bool temp = m_coilover_mode_toggle;
+    m_coilover_mode_toggle = false;
     return temp;
 }
 
@@ -81,6 +88,9 @@ void controller_do() {
 
     if (crd) {
         m_arm_toggle = true;
+    }
+    if (sqd) {
+        m_coilover_mode_toggle = true;
     }
 
     m_throttle = calc_throttle(l2, r2);
