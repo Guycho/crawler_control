@@ -24,6 +24,8 @@ float calc_dead_band(float x, float max_output, float dead_band) {
     return scaled_temp;
 }
 float milli_to_single(float x) { return x / 1e3; }
-
+float rad_to_deg(float x){
+    return x * 180 / PI;
+}
 }  // namespace Calcs
 }  // namespace Utils

@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include <all/mavlink.h>
+#include <Chrono.h>
 
 #include "utils.h"
 struct MavBridgeConfig {
@@ -11,6 +12,7 @@ struct MavBridgeConfig {
     uint8_t system_id;
     uint8_t component_id;
     uint8_t message_rate;
+    uint32_t is_alive_timeout;
 };
 
 struct Vector3D {
@@ -23,13 +25,14 @@ struct InertialData {
     Vector3D gyro;
     Vector3D accel;
     Vector3D orientation;
+    bool is_alive = false;
 };
 
 struct MavMsg {
     uint8_t system_id;
     uint8_t component_id;
     uint16_t msg_id;
-    float params[7];
+    float params[7] = {0, 0, 0, 0, 0, 0, 0};
 
 };
 class MavBridge {
@@ -51,6 +54,10 @@ class MavBridge {
     uint8_t m_system_id;
     uint8_t m_component_id;
     uint8_t m_message_rate;
+    uint16_t m_is_alive_timeout;
+
+    Chrono m_is_alive_timer;
+    InertialData m_inertial_data;
 };
 
 #endif  // MAV_BRIDGE_H

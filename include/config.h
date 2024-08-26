@@ -6,34 +6,47 @@
 namespace Config {
 const uint8_t num_wheels = 4;
 const uint8_t num_steering = 4;
-
 namespace Esc {
 namespace Wheel {
-const uint8_t pin[4] = {2, 3, 4, 5};
-const uint16_t min_pulse[4] = {1000, 1000, 1000, 1000};
-const uint16_t max_pulse[4] = {2000, 2000, 2000, 2000};
+extern const uint8_t pin[];
+extern const uint16_t min_pulse[];
+extern const uint16_t max_pulse[];
 }  // namespace Wheel
 namespace Steering {
-const uint8_t pin[4] = {2, 3, 4, 5};
-const uint16_t min_pulse[4] = {1000, 1000, 1000, 1000};
-const uint16_t max_pulse[4] = {2000, 2000, 2000, 2000};
+extern const uint8_t pin[];
+extern const uint16_t min_pulse[];
+extern const uint16_t max_pulse[];
 }  // namespace Steering
 }  // namespace Esc
 namespace Encoder {
-const uint8_t pin[4] = {10, 11, 12, 13};
-const bool reverse[4] = {false, false, false, false};
-const float offset[4] = {0, 0, 0, 0};
+extern const uint8_t pin[];
+extern const bool reverse[];
+extern const float offset[];
 }  // namespace Encoder
 namespace Controller {
-const float Kp[4] = {0.1, 0.1, 0.1, 0.1};
-const float max_output[4] = {1, 1, 1, 1};
-}  // namespace controller
+extern const float Kp[];
+extern const float max_output[];
+}  // namespace Controller
 namespace Wheel {
-const float max_speed_pct[4] = {100, 100, 100, 100};
+extern const float max_speed_pct[];
 }  // namespace Wheel
 namespace Steering {
-const float max_angle[4] = {90, 90, 90, 90};
-const float max_speed_pct[4] = {100, 100, 100, 100};
+extern const float max_angle[];
+extern const float max_speed_pct[];
 }  // namespace Steering
+namespace MavlinkBridge {
+extern const HardwareSerial *serial;
+extern const uint32_t baudrate;
+extern const uint8_t system_id;
+extern const uint8_t component_id;
+extern const uint8_t steering_channel;
+extern const uint8_t throttle_channel;
+extern const uint8_t message_rate;
+extern const uint32_t is_alive_timeout;
+}  // namespace MavlinkBridge
+namespace PS4Controller {
+extern const char *mac;
+extern const float dead_band;
+}  // namespace PS4Controller
 }  // namespace Config
 #endif  // CONFIG_H

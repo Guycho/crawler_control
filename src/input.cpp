@@ -15,13 +15,13 @@ bool m_arm_toggle;
 
 uint8_t m_dead_band;
 
-void init_ps4(const char* mac, float dead_band) {
+void init_ps4(const InputControllerConfig config) {
     PS4.attach(controller_do);
     PS4.attachOnConnect(on_connect);
     PS4.attachOnDisconnect(on_disConnect);
-    PS4.begin(mac);
+    PS4.begin(config.mac);
     remove_paired_devices();  // This helps to solve connection issues
-    m_dead_band = dead_band;
+    m_dead_band = config.dead_band;
 }
 
 float get_throttle() { return m_throttle; }

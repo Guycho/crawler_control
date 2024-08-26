@@ -9,7 +9,12 @@
 #include "esp_gap_bt_api.h"
 #include "utils.h"
 
-void init_ps4(const char* mac, float dead_band);
+struct InputControllerConfig {
+    const char* mac;
+    float dead_band;
+};
+
+void init_ps4(const InputControllerConfig config);
 float get_throttle();
 float get_steering();
 bool get_steering_mode_toggle();
