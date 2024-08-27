@@ -24,9 +24,11 @@ void CoiloverAdjuster::set_pos(float pos) {
 
 void CoiloverAdjuster::reset() { set_pos(0); }  // Method to reset the coilover position
 
+void CoiloverAdjuster::set_base_pos(float pos) {
+    m_base_pos = pos;  // Setting the base position of the coilover
+}
 void CoiloverAdjuster::run(float diff) {
     float output = m_controller.calculateOutput(diff);  // Running the controller
-    float current_pos = Utils::Calcs::map_float(m_servo_output.readMicroseconds(), m_min_pulse,
-      m_max_pulse, -100, 100);
-    set_pos(current_pos + output);  // Setting the coilover position
+    m_current_pos = m_base_pos + output;
+    set_pos(m_current_pos + m_base_pos);  // Setting the coilover position
 }  // Method to run the coilover adjuster

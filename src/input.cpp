@@ -21,6 +21,7 @@ bool m_ride_height_up;
 bool m_ride_height_down;
 bool m_roll_pitch_reset;
 bool m_ride_height_reset;
+bool m_new_data;
 
 uint8_t m_dead_band;
 
@@ -77,7 +78,9 @@ void controller_do() {
             l1d = PS4.event.button_down.l1, r1d = PS4.event.button_down.r1,
             l3d = PS4.event.button_down.l3, r3d = PS4.event.button_down.r3;
 
-    boolean sq = PS4.Square(), tr = PS4.Triangle(), cr = PS4.Cross(), ci = PS4.Circle();
+    boolean sq = PS4.Square(), tr = PS4.Triangle(), cr = PS4.Cross(), ci = PS4.Circle(), 
+            up = PS4.Up(), right = PS4.Right(), down = PS4.Down(), left = PS4.Left(), 
+            l1 = PS4.L1(), r1 = PS4.R1();
 
     int8_t lx = PS4.LStickX(), ly = PS4.LStickY(), rx = PS4.RStickX(), ry = PS4.RStickY();
 
@@ -108,15 +111,52 @@ void controller_do() {
         m_ride_height_reset = true;
     }
 
-    m_ride_height_up = l1d;
-    m_ride_height_down = r1d;
-    m_pitch_forward = upd;
-    m_roll_right = rid;
-    m_pitch_backward = dod;
-    m_roll_left = led;
+    m_ride_height_up = l1;
+    m_ride_height_down = r1;
+    m_pitch_forward = up;
+    m_roll_right = right;
+    m_pitch_backward = down;
+    m_roll_left = left;
 
     m_throttle = calc_throttle(l2, r2);
     m_steering = calc_steering(lx);
+
+    bool new_data = false;
+}
+
+InputControllerData get_input_data(){
+    InputControllerData data;
+    data.throttle = m_throttle;
+    data.steering = m_steering;
+    data.steering_mode_toggle = m_steering_mode_toggle;
+    data.throttle_mode_toggle = m_throttle_mode_toggle;
+    data.coilover_mode_toggle = m_coilover_mode_toggle;
+    data.arm_toggle = m_arm_toggle;
+    data.roll_right = m_roll_right;
+    data.roll_left = m_roll_left;
+    data.pitch_forward = m_pitch_forward;
+    data.pitch_backward = m_pitch_backward;
+    data.ride_height_up = m_ride_height_up;
+    data.ride_height_down = m_ride_height_down;
+    data.roll_pitch_reset = m_roll_pitch_reset;
+    data.ride_height_reset = m_ride_height_reset;
+    data.new_data = m_new_data;
+    m_throttle = 0;
+    m_steering = 0;
+    m_steering_mode_toggle = false;
+    m_throttle_mode_toggle = false;
+    m_coilover_mode_toggle = false;
+    m_arm_toggle = false;
+    m_roll_right = false;
+    m_roll_left = false;
+    m_pitch_forward = false;
+    m_pitch_backward = false;
+    m_ride_height_up = false;
+    m_ride_height_down = false;
+    m_roll_pitch_reset = false;
+    m_ride_height_reset = false;
+    m_new_data = false;
+    return data;
 }
 
 float calc_throttle(uint8_t l2, uint8_t r2) {

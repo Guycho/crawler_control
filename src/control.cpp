@@ -20,22 +20,52 @@ void Control::init(const ControlConfig &config) {
     float m_steering = 0;
 }
 void Control::run() {
-    if (get_arm_toggle()) {
-        m_arm_enabled = !m_arm_enabled;
-    }
-    if (get_steering_mode_toggle()) {
-        m_steering_mode = (m_steering_mode + 1) % NUM_STEERING_MODES;
-    }
-    if (get_throttle_mode_toggle()) {
-        m_throttle_mode = (m_throttle_mode + 1) % NUM_THROTTLE_MODES;
-    }
-    if (get_coilover_mode_toggle()) {
-        m_coilover_mode = (m_coilover_mode + 1) % NUM_COILOVER_MODES;
-    }
     m_mav_bridge.run();
     m_inertial_data = m_mav_bridge.get_inertial_data();
-    m_steering = get_steering();
-    m_throttle = get_throttle();
+    InputControllerData input_data = get_input_data();
+    if (!input_data.new_data) {
+        return;
+    }
+    if (input_data.arm_toggle) {
+        m_arm_enabled = !m_arm_enabled;
+    }
+    if (input_data.steering_mode_toggle) {
+        m_steering_mode = (m_steering_mode + 1) % NUM_STEERING_MODES;
+    }
+    if (input_data.throttle_mode_toggle) {
+        m_throttle_mode = (m_throttle_mode + 1) % NUM_THROTTLE_MODES;
+    }
+    if (input_data.coilover_mode_toggle) {
+        m_coilover_mode = (m_coilover_mode + 1) % NUM_COILOVER_MODES;
+    }
+    m_steering = input_data.steering;
+    m_throttle = input_data.throttle;
+    if (input_data.roll_pitch_reset) {
+        m_des_roll_pitch = {0, 0};
+    }
+    if (input_data.ride_height_reset) {
+        m_ride_height = 0;
+    }
+    if (input_data.roll_right) {
+        m_des_roll_pitch.roll += 0.5;
+    }
+    else if (input_data.roll_left) {
+        m_des_roll_pitch.roll -= 0.5;
+    }
+    if (input_data.pitch_forward) {
+        m_des_roll_pitch.pitch += 0.5;
+    }
+    else if (input_data.pitch_backward) {
+        m_des_roll_pitch.pitch -= 0.5;
+    }
+    if (input_data.ride_height_up) {
+        m_ride_height += 0.5;
+    }
+    else if (input_data.ride_height_down) {
+        m_ride_height -= 0.5;
+    }
+    RollPitch roll_pitch = {m_inertial_data.orientation.x, m_inertial_data.orientation.y};
+
     steering_state_machine_run(m_arm_enabled, m_steering, m_steering_mode);
     throttle_state_machine_run(m_arm_enabled, m_throttle, m_throttle_mode);
 }
@@ -117,7 +147,7 @@ void Control::throttle_state_machine_run(bool arm_enabled, float throttle, uint8
     }
 }
 void Control::coilover_state_machine_run(bool arm_enabled, uint8_t coilover_mode,
-  RollPitch roll_pitch, RollPitch des_roll_pitch) {
+  RollPitch roll_pitch, RollPitch des_roll_pitch, float ride_height) {
     if (arm_enabled) {
         switch (coilover_mode) {
             case OFF:
@@ -129,7 +159,10 @@ void Control::coilover_state_machine_run(bool arm_enabled, uint8_t coilover_mode
             case STABILIZE:
                 RollPitch m_roll_pitch = Utils::Calcs::rotateRollPitch45Degrees(roll_pitch);
                 RollPitch m_des_roll_pitch = Utils::Calcs::rotateRollPitch45Degrees(des_roll_pitch);
-
+                m_coilover_adjusters[FR].set_base_pos(ride_height);
+                m_coilover_adjusters[RR].set_base_pos(ride_height);
+                m_coilover_adjusters[RL].set_base_pos(ride_height);
+                m_coilover_adjusters[FL].set_base_pos(ride_height);
                 float m_des_coilover_diff[Config::num_coilover];
                 m_des_coilover_diff[FR] = m_roll_pitch.pitch - m_des_roll_pitch.pitch;
                 m_des_coilover_diff[RR] = m_roll_pitch.roll - m_des_roll_pitch.roll;

@@ -41,11 +41,12 @@ class Control {
     MavBridge m_mav_bridge;
 
     InertialData m_inertial_data;
+    RollPitch m_des_roll_pitch;
 
     void steering_state_machine_run(bool arm_enabled, float steering, uint8_t steering_mode);
     void throttle_state_machine_run(bool arm_enabled, float throttle, uint8_t throttle_mode);
     void coilover_state_machine_run(bool arm_enabled, uint8_t coilover_mode, RollPitch roll_pitch,
-      RollPitch des_roll_pitch);
+      RollPitch des_roll_pitch, float ride_height);
     static constexpr SteeringMode steering_modes[] = {FRONT, REAR, ALL, CRAB, S_PIVOT};
     static constexpr uint8_t NUM_STEERING_MODES =
       sizeof(steering_modes) / sizeof(steering_modes[0]);
@@ -61,6 +62,7 @@ class Control {
     bool m_arm_enabled = false;
     float m_throttle;
     float m_steering;
+    float m_ride_height;
 };
 
 #endif  // CONTROL_H

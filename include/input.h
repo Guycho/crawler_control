@@ -9,19 +9,30 @@
 #include "esp_gap_bt_api.h"
 #include "utils.h"
 
-struct Inpu
+struct InputControllerData {
+    float throttle;
+    float steering;
+    bool steering_mode_toggle;
+    bool throttle_mode_toggle;
+    bool coilover_mode_toggle;
+    bool arm_toggle;
+    bool roll_right;
+    bool roll_left;
+    bool pitch_forward;
+    bool pitch_backward;
+    bool ride_height_up;
+    bool ride_height_down;
+    bool roll_pitch_reset;
+    bool ride_height_reset;
+    bool new_data;
+};
 struct InputControllerConfig {
     const char* mac;
     float dead_band;
 };
 
 void init_ps4(const InputControllerConfig config);
-float get_throttle();
-float get_steering();
-bool get_steering_mode_toggle();
-bool get_throttle_mode_toggle();
-bool get_coilover_mode_toggle();
-bool get_arm_toggle();
+InputControllerData get_input_data();
 
 
 #endif  // INPUT_CONTROLLER_H

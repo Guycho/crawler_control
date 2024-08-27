@@ -20,6 +20,7 @@ class CoiloverAdjuster {
 
     void init(const CoiloverAdjusterConfig &config);
     void set_pos(float pos);
+    void set_base_pos(float pos);
     void reset();
     void run(float diff);
 
@@ -32,6 +33,8 @@ class CoiloverAdjuster {
     uint16_t m_max_pulse;
     uint16_t m_mid_pulse;
     bool m_reverse;
+    float m_current_pos;
+    float m_base_pos;
 };
 
 #endif  // COILOVER_ADJUSTER_H
