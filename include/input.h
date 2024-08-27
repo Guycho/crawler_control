@@ -9,6 +9,7 @@
 #include "esp_gap_bt_api.h"
 #include "utils.h"
 
+struct Inpu
 struct InputControllerConfig {
     const char* mac;
     float dead_band;

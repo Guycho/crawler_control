@@ -13,6 +13,14 @@ bool m_steering_mode_toggle;
 bool m_throttle_mode_toggle;
 bool m_coilover_mode_toggle;
 bool m_arm_toggle;
+bool m_roll_right;
+bool m_roll_left;
+bool m_pitch_forward;
+bool m_pitch_backward;
+bool m_ride_height_up;
+bool m_ride_height_down;
+bool m_roll_pitch_reset;
+bool m_ride_height_reset;
 
 uint8_t m_dead_band;
 
@@ -62,12 +70,12 @@ void remove_paired_devices() {
 }
 
 void controller_do() {
-    boolean sqd = PS4.event.button_down.square, squ = PS4.event.button_up.square,
-            trd = PS4.event.button_down.triangle, tru = PS4.event.button_up.triangle,
-            crd = PS4.event.button_down.cross, cru = PS4.event.button_up.cross,
-            cid = PS4.event.button_down.circle, ciu = PS4.event.button_up.circle,
+    boolean sqd = PS4.event.button_down.square, trd = PS4.event.button_down.triangle,
+            crd = PS4.event.button_down.cross, cid = PS4.event.button_down.circle,
             upd = PS4.event.button_down.up, rid = PS4.event.button_down.right,
-            dod = PS4.event.button_down.down, lid = PS4.event.button_down.left;
+            dod = PS4.event.button_down.down, led = PS4.event.button_down.left,
+            l1d = PS4.event.button_down.l1, r1d = PS4.event.button_down.r1,
+            l3d = PS4.event.button_down.l3, r3d = PS4.event.button_down.r3;
 
     boolean sq = PS4.Square(), tr = PS4.Triangle(), cr = PS4.Cross(), ci = PS4.Circle();
 
@@ -81,17 +89,31 @@ void controller_do() {
     if (trd) {
         m_steering_mode_toggle = true;
     }
-
-    if(cid) {
+    if (cid) {
         m_throttle_mode_toggle = true;
     }
-
     if (crd) {
         m_arm_toggle = true;
     }
     if (sqd) {
         m_coilover_mode_toggle = true;
     }
+    if (l3d) {
+        m_roll_pitch_reset = true;
+    }
+    if (l3d) {
+        m_roll_pitch_reset = true;
+    }
+    if (r3d) {
+        m_ride_height_reset = true;
+    }
+
+    m_ride_height_up = l1d;
+    m_ride_height_down = r1d;
+    m_pitch_forward = upd;
+    m_roll_right = rid;
+    m_pitch_backward = dod;
+    m_roll_left = led;
 
     m_throttle = calc_throttle(l2, r2);
     m_steering = calc_steering(lx);
