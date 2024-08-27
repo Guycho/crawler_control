@@ -35,9 +35,12 @@ void setup() {
     }
     for (uint8_t i = 0; i < Config::num_coilover; i++) {
         CoiloverAdjusterConfig coilover_adjuster_config;
-        coilover_adjuster_config.pin = Config::Coilover::pin[i];
-        coilover_adjuster_config.min_pulse = Config::Coilover::min_pulse[i];
-        coilover_adjuster_config.max_pulse = Config::Coilover::max_pulse[i];
+        coilover_adjuster_config.pin = Config::Esc::Coilover::pin[i];
+        coilover_adjuster_config.min_pulse = Config::Esc::Coilover::min_pulse[i];
+        coilover_adjuster_config.max_pulse = Config::Esc::Coilover::max_pulse[i];
+        coilover_adjuster_config.reverse = Config::Coilover::reverse[i];
+        coilover_adjuster_config.controller_config.Kp = Config::Coilover::Controller::Kp[i];
+        coilover_adjuster_config.controller_config.max_output = Config::Coilover::Controller::max_output[i];
         coilover_adjusters[i].init(coilover_adjuster_config);
     }
 

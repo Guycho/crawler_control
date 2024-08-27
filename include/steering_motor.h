@@ -20,8 +20,8 @@ class SteeringMotor {
 
     void init(const SteeringMotorConfig& config);
     void setAngle(float angle);  // Method to set angle
-    void stop();      // Method to stop the motor
-    void run();       // Method to run the motor
+    void stop();                 // Method to stop the motor
+    void run();                  // Method to run the motor
 
    private:
     BrushedMotor m_motor;         // Variable to store the motor
@@ -31,7 +31,7 @@ class SteeringMotor {
     void setSpeedPct(float speed_pct);
 
     float m_max_speed_pct;  // Variable to store the motor max speed
-    float max_angle;
+    float m_max_angle;
     float m_des_angle;
     uint16_t m_max_pulse;
     uint16_t m_min_pulse;

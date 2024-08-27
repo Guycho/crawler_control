@@ -7,13 +7,13 @@ void SteeringMotor::init(const SteeringMotorConfig& config) {
     m_encoder.init(config.encoder_config);
     m_controller.init(config.controller_config);
     m_max_speed_pct = config.max_speed_pct;
-    max_angle = config.max_angle;
+    m_max_angle = config.max_angle;
     m_max_pulse = config.motor_config.max_pulse;
     m_min_pulse = config.motor_config.min_pulse;
 }  // Method to start the motor
 
 void SteeringMotor::setAngle(float angle) {
-    m_des_angle = Utils::Calcs::constrain_float(angle, -max_angle, max_angle);
+    m_des_angle = Utils::Calcs::constrain_float(angle, -m_max_angle, m_max_angle);
 }  // Method to set angle
 void SteeringMotor::stop() { setAngle(m_encoder.getAngle()); }  // Method to stop the motor
 void SteeringMotor::run() {

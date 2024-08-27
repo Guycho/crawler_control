@@ -7,7 +7,7 @@
 
 #include "utils.h"
 struct MavBridgeConfig {
-    const HardwareSerial *serial;
+    HardwareSerial *serial;
     uint32_t baudrate;
     uint8_t system_id;
     uint8_t component_id;

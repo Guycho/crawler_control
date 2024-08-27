@@ -20,7 +20,6 @@ void Control::init(const ControlConfig &config) {
     float m_steering = 0;
 }
 void Control::run() {
-    
     if (get_arm_toggle()) {
         m_arm_enabled = !m_arm_enabled;
     }
@@ -117,23 +116,35 @@ void Control::throttle_state_machine_run(bool arm_enabled, float throttle, uint8
         m_wheel_motors[RL].setSpeedPct(0);
     }
 }
-void Control::coilover_state_machine_run(bool arm_enabled, uint8_t coilover_mode) {
+void Control::coilover_state_machine_run(bool arm_enabled, uint8_t coilover_mode,
+  RollPitch roll_pitch, RollPitch des_roll_pitch) {
     if (arm_enabled) {
         switch (coilover_mode) {
             case OFF:
-                for (int i = 0; i < Config::num_coilover; i++) {
-                    m_coilover_adjusters[i].reset();
-                }
+                m_coilover_adjusters[FR].reset();
+                m_coilover_adjusters[RR].reset();
+                m_coilover_adjusters[RL].reset();
+                m_coilover_adjusters[FL].reset();
                 break;
             case STABILIZE:
-                for (int i = 0; i < Config::num_coilover; i++) {
-                    m_coilover_adjusters[i].setPos(m_coilover_pos[i]);
-                }
+                RollPitch m_roll_pitch = Utils::Calcs::rotateRollPitch45Degrees(roll_pitch);
+                RollPitch m_des_roll_pitch = Utils::Calcs::rotateRollPitch45Degrees(des_roll_pitch);
+
+                float m_des_coilover_diff[Config::num_coilover];
+                m_des_coilover_diff[FR] = m_roll_pitch.pitch - m_des_roll_pitch.pitch;
+                m_des_coilover_diff[RR] = m_roll_pitch.roll - m_des_roll_pitch.roll;
+                m_des_coilover_diff[RL] = -m_roll_pitch.pitch + m_des_roll_pitch.pitch;
+                m_des_coilover_diff[FL] = -m_roll_pitch.roll + m_des_roll_pitch.roll;
+                m_coilover_adjusters[FR].run(m_des_coilover_diff[FR]);
+                m_coilover_adjusters[RR].run(m_des_coilover_diff[RR]);
+                m_coilover_adjusters[RL].run(m_des_coilover_diff[RL]);
+                m_coilover_adjusters[FL].run(m_des_coilover_diff[FL]);
                 break;
         }
     } else {
-        for (int i = 0; i < Config::num_coilover; i++) {
-            m_coilover_adjusters[i].setPos(0);
-        }
+        m_coilover_adjusters[FR].reset();
+        m_coilover_adjusters[RR].reset();
+        m_coilover_adjusters[RL].reset();
+        m_coilover_adjusters[FL].reset();
     }
 }

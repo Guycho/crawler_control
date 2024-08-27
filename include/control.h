@@ -7,6 +7,8 @@
 #include "wheel_motor.h"
 #include "coilover_adjuster.h"
 
+using RollPitch = Utils::Calcs::RollPitch;
+
 enum SteeringMode { ALL = 0, FRONT = 1, REAR = 2, CRAB = 3, S_PIVOT = 4 };
 enum ThrottleMode { AWD = 0, FWD = 1, RWD = 2, T_PIVOT = 3 };
 enum CoiloverMode { OFF = 0, STABILIZE = 1 };
@@ -42,7 +44,8 @@ class Control {
 
     void steering_state_machine_run(bool arm_enabled, float steering, uint8_t steering_mode);
     void throttle_state_machine_run(bool arm_enabled, float throttle, uint8_t throttle_mode);
-    void coilover_state_machine_run(bool arm_enabled, uint8_t coilover_mode);
+    void coilover_state_machine_run(bool arm_enabled, uint8_t coilover_mode, RollPitch roll_pitch,
+      RollPitch des_roll_pitch);
     static constexpr SteeringMode steering_modes[] = {FRONT, REAR, ALL, CRAB, S_PIVOT};
     static constexpr uint8_t NUM_STEERING_MODES =
       sizeof(steering_modes) / sizeof(steering_modes[0]);
@@ -55,7 +58,6 @@ class Control {
     uint8_t m_steering_mode;
     uint8_t m_throttle_mode;
     uint8_t m_coilover_mode;
-    float m_coilover_pos[Config::num_coilover];
     bool m_arm_enabled = false;
     float m_throttle;
     float m_steering;

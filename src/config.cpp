@@ -12,6 +12,11 @@ const uint8_t pin[num_steering] = {2, 3, 4, 5};
 const uint16_t min_pulse[num_steering] = {1000, 1000, 1000, 1000};
 const uint16_t max_pulse[num_steering] = {2000, 2000, 2000, 2000};
 }  // namespace Steering
+namespace Coilover {
+const uint8_t pin[num_coilover] = {2, 3, 4, 5};
+const uint16_t min_pulse[num_coilover] = {1000, 1000, 1000, 1000};
+const uint16_t max_pulse[num_coilover] = {2000, 2000, 2000, 2000};
+}  // namespace Coilover
 }  // namespace Esc
 namespace Encoder {
 const uint8_t pin[num_steering] = {10, 11, 12, 13};
@@ -30,7 +35,7 @@ const float max_angle[num_steering] = {90, 90, 90, 90};
 const float max_speed_pct[num_steering] = {100, 100, 100, 100};
 }  // namespace Steering
 namespace MavlinkBridge {
-const HardwareSerial *serial = &Serial2;
+HardwareSerial *serial = &Serial2;
 const uint32_t baudrate = 500000;
 const uint8_t system_id = 1;
 const uint8_t component_id = 0;
@@ -44,10 +49,10 @@ const char *mac = "A0:DD:6C:03:9A:EE";
 const float dead_band = 5;
 }  // namespace PS4Controller
 namespace Coilover {
-const uint8_t pin[num_coilover] = {2, 3, 4, 5};
-const uint16_t min_pulse[num_coilover] = {1000, 1000, 1000, 1000};
-const uint16_t max_pulse[num_coilover] = {2000, 2000, 2000, 2000};
-const bool reverse[];
+const bool reverse[] = {false, false, false, false};
+namespace Controller {
+const float Kp[] = {0.1, 0.1, 0.1, 0.1};
+const float max_output[] = {1, 1, 1, 1};
+}  // namespace Controller
 }  // namespace Coilover
-
 }  // namespace Config

@@ -18,6 +18,11 @@ extern const uint8_t pin[];
 extern const uint16_t min_pulse[];
 extern const uint16_t max_pulse[];
 }  // namespace Steering
+namespace Coilover {
+extern const uint8_t pin[];
+extern const uint16_t min_pulse[];
+extern const uint16_t max_pulse[];
+}  // namespace Coilover
 }  // namespace Esc
 namespace Encoder {
 extern const uint8_t pin[];
@@ -36,7 +41,7 @@ extern const float max_angle[];
 extern const float max_speed_pct[];
 }  // namespace Steering
 namespace MavlinkBridge {
-extern const HardwareSerial *serial;
+extern HardwareSerial *serial;
 extern const uint32_t baudrate;
 extern const uint8_t system_id;
 extern const uint8_t component_id;
@@ -50,10 +55,11 @@ extern const char *mac;
 extern const float dead_band;
 }  // namespace PS4Controller
 namespace Coilover {
-extern const uint8_t pin[];
-extern const uint16_t min_pulse[];
-extern const uint16_t max_pulse[];
 extern const bool reverse[];
-} // namespace Coilover
+namespace Controller {
+extern const float Kp[];
+extern const float max_output[];
+}  // namespace Controller
+}  // namespace Coilover
 }  // namespace Config
 #endif  // CONFIG_H
