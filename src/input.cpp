@@ -121,7 +121,7 @@ void controller_do() {
     m_throttle = calc_throttle(l2, r2);
     m_steering = calc_steering(lx);
 
-    bool new_data = false;
+    m_new_data = true;
 }
 
 InputControllerData get_input_data(){

@@ -4,6 +4,7 @@ Control::Control() {}
 Control::~Control() {}
 
 void Control::init(const ControlConfig &config) {
+    m_hb_timer.start();
     for (int i = 0; i < Config::num_steering; i++) {
         m_steering_motors[i] = *config.steering_motors[i];
     }
@@ -23,51 +24,53 @@ void Control::run() {
     m_mav_bridge.run();
     m_inertial_data = m_mav_bridge.get_inertial_data();
     InputControllerData input_data = get_input_data();
-    if (!input_data.new_data) {
-        return;
+    if (input_data.new_data) {
+        if (input_data.arm_toggle) {
+            m_arm_enabled = !m_arm_enabled;
+        }
+        if (input_data.steering_mode_toggle) {
+            m_steering_mode = (m_steering_mode + 1) % NUM_STEERING_MODES;
+        }
+        if (input_data.throttle_mode_toggle) {
+            m_throttle_mode = (m_throttle_mode + 1) % NUM_THROTTLE_MODES;
+        }
+        if (input_data.coilover_mode_toggle) {
+            m_coilover_mode = (m_coilover_mode + 1) % NUM_COILOVER_MODES;
+        }
+        m_steering = input_data.steering;
+        m_throttle = input_data.throttle;
+        if (input_data.roll_pitch_reset) {
+            m_des_roll_pitch = {0, 0};
+        }
+        if (input_data.ride_height_reset) {
+            m_ride_height = 0;
+        }
+        if (input_data.roll_right) {
+            m_des_roll_pitch.roll += 0.5;
+        } else if (input_data.roll_left) {
+            m_des_roll_pitch.roll -= 0.5;
+        }
+        if (input_data.pitch_forward) {
+            m_des_roll_pitch.pitch += 0.5;
+        } else if (input_data.pitch_backward) {
+            m_des_roll_pitch.pitch -= 0.5;
+        }
+        if (input_data.ride_height_up) {
+            m_ride_height += 0.5;
+        } else if (input_data.ride_height_down) {
+            m_ride_height -= 0.5;
+        }
+        m_hb_timer.restart();
     }
-    if (input_data.arm_toggle) {
-        m_arm_enabled = !m_arm_enabled;
-    }
-    if (input_data.steering_mode_toggle) {
-        m_steering_mode = (m_steering_mode + 1) % NUM_STEERING_MODES;
-    }
-    if (input_data.throttle_mode_toggle) {
-        m_throttle_mode = (m_throttle_mode + 1) % NUM_THROTTLE_MODES;
-    }
-    if (input_data.coilover_mode_toggle) {
-        m_coilover_mode = (m_coilover_mode + 1) % NUM_COILOVER_MODES;
-    }
-    m_steering = input_data.steering;
-    m_throttle = input_data.throttle;
-    if (input_data.roll_pitch_reset) {
-        m_des_roll_pitch = {0, 0};
-    }
-    if (input_data.ride_height_reset) {
-        m_ride_height = 0;
-    }
-    if (input_data.roll_right) {
-        m_des_roll_pitch.roll += 0.5;
-    }
-    else if (input_data.roll_left) {
-        m_des_roll_pitch.roll -= 0.5;
-    }
-    if (input_data.pitch_forward) {
-        m_des_roll_pitch.pitch += 0.5;
-    }
-    else if (input_data.pitch_backward) {
-        m_des_roll_pitch.pitch -= 0.5;
-    }
-    if (input_data.ride_height_up) {
-        m_ride_height += 0.5;
-    }
-    else if (input_data.ride_height_down) {
-        m_ride_height -= 0.5;
+    if (m_hb_timer.hasPassed(100, true)) {
+        m_arm_enabled = false;
     }
     RollPitch roll_pitch = {m_inertial_data.orientation.x, m_inertial_data.orientation.y};
 
     steering_state_machine_run(m_arm_enabled, m_steering, m_steering_mode);
     throttle_state_machine_run(m_arm_enabled, m_throttle, m_throttle_mode);
+    coilover_state_machine_run(m_arm_enabled, m_coilover_mode, roll_pitch, m_des_roll_pitch,
+      m_ride_height);
 }
 
 void Control::steering_state_machine_run(bool arm_enabled, float steering, uint8_t steering_mode) {
@@ -151,8 +154,6 @@ void Control::coilover_state_machine_run(bool arm_enabled, uint8_t coilover_mode
     if (arm_enabled) {
         switch (coilover_mode) {
             case OFF:
-                m_coilover_adjusters[FR].reset();
-                m_coilover_adjusters[RR].reset();
                 m_coilover_adjusters[RL].reset();
                 m_coilover_adjusters[FL].reset();
                 break;
@@ -181,3 +182,8 @@ void Control::coilover_state_machine_run(bool arm_enabled, uint8_t coilover_mode
         m_coilover_adjusters[FL].reset();
     }
 }
+
+bool Control::get_arm_enabled() { return m_arm_enabled; }
+uint8_t Control::get_steering_mode() { return m_steering_mode; }
+uint8_t Control::get_throttle_mode() { return m_throttle_mode; }
+uint8_t Control::get_coilover_mode() { return m_coilover_mode; }

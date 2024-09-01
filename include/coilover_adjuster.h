@@ -23,6 +23,7 @@ class CoiloverAdjuster {
     void set_base_pos(float pos);
     void reset();
     void run(float diff);
+    float get_pos();
 
 
    private:

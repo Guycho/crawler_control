@@ -17,6 +17,7 @@ class WheelMotor {
     void init(const WheelMotorConfig& config);  // Method to start the motor
     void setSpeedPct(float speed_pct);            // Method to set the motor speed percentage
     void stop();
+    float getSpeedPct();  // Method to get the motor speed percentage
 
    private:
     BrushedMotor m_motor;  // Variable to store the motor

@@ -1,11 +1,13 @@
 #ifndef CONTROL_H
 #define CONTROL_H
+#include <Chrono.h>
+
+#include "coilover_adjuster.h"
 #include "config.h"
 #include "input.h"
 #include "mav_bridge.h"
 #include "steering_motor.h"
 #include "wheel_motor.h"
-#include "coilover_adjuster.h"
 
 using RollPitch = Utils::Calcs::RollPitch;
 
@@ -19,7 +21,6 @@ struct ControlConfig {
     WheelMotor *wheel_motors[Config::num_wheels];
     CoiloverAdjuster *coilover_adjusters[Config::num_coilover];
     MavBridge *mav_bridge;
-
 };
 
 class Control {
@@ -33,8 +34,14 @@ class Control {
     void init(const ControlConfig &config);
 
     void run();
+    bool get_arm_enabled();
+    uint8_t get_steering_mode();
+    uint8_t get_throttle_mode();
+    uint8_t get_coilover_mode();
 
    private:
+    Chrono m_hb_timer;
+
     SteeringMotor m_steering_motors[Config::num_steering];
     WheelMotor m_wheel_motors[Config::num_wheels];
     CoiloverAdjuster m_coilover_adjusters[Config::num_coilover];
@@ -60,9 +67,9 @@ class Control {
     uint8_t m_throttle_mode;
     uint8_t m_coilover_mode;
     bool m_arm_enabled = false;
-    float m_throttle;
-    float m_steering;
-    float m_ride_height;
+    float m_throttle = 0;
+    float m_steering = 0;
+    float m_ride_height = 0;
 };
 
 #endif  // CONTROL_H

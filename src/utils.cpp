@@ -24,10 +24,8 @@ float calc_dead_band(float x, float max_output, float dead_band) {
     return scaled_temp;
 }
 float milli_to_single(float x) { return x / 1e3; }
-float rad_to_deg(float x){
-    return x * 180 / PI;
-}
-RollPitch rotateRollPitch(float roll, float pitch) {
+float rad_to_deg(float x) { return x * 180 / PI; }
+RollPitch rotateRollPitch45Degrees(RollPitch roll_pitch) {
     const float angle = M_PI / 4;  // 45 degrees in radians
 
     // Roll (x-axis) rotation matrix
@@ -49,7 +47,7 @@ RollPitch rotateRollPitch(float roll, float pitch) {
     }
 
     // Input vector (roll, pitch, 0)
-    float input[3] = {roll, pitch, 0};
+    float input[3] = {roll_pitch.roll, roll_pitch.pitch, 0};
     float output[3] = {0};
 
     // Apply the rotation matrix to the input vector

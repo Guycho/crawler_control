@@ -22,9 +22,10 @@ class SteeringMotor {
     void setAngle(float angle);  // Method to set angle
     void stop();                 // Method to stop the motor
     void run();                  // Method to run the motor
+    float getAngle();            // Method to get the angle
+    float getDesAngle();         // Method to get the desired angle
 
-   private:
-    BrushedMotor m_motor;         // Variable to store the motor
+private : BrushedMotor m_motor;   // Variable to store the motor
     RotationalEncoder m_encoder;  // Variable to store the encoder
     PController m_controller;     // Variable to store the controller
 

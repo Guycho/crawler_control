@@ -13,3 +13,7 @@ void BrushedMotor::init(const BrushedMotorConfig &config) {
 void BrushedMotor::setMicroSeconds(uint16_t micro_seconds) {
     m_servo_output.writeMicroseconds(micro_seconds);  // Setting the motor speed
 }  // Method to set the motor speed
+
+uint16_t BrushedMotor::getMicroSeconds() {
+    return m_servo_output.readMicroseconds();  // Getting the motor speed
+}  // Method to get the motor speed

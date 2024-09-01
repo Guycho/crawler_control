@@ -28,3 +28,7 @@ void SteeringMotor::setSpeedPct(float speed_pct) {
       m_min_pulse, m_max_pulse);
     m_motor.setMicroSeconds(pulse);
 }  // Method to set the motor speed percentage
+
+float SteeringMotor::getAngle() { return m_encoder.getAngle(); }  // Method to get the angle
+
+float SteeringMotor::getDesAngle() { return m_des_angle; }  // Method to get the desired angle

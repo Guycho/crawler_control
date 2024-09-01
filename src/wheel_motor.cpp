@@ -18,3 +18,6 @@
     void WheelMotor::stop(){
         setSpeedPct(0);
     }
+    float WheelMotor::getSpeedPct(){
+        return Utils::Calcs::map_float(m_motor.getMicroSeconds(), m_min_pulse, m_max_pulse, -m_max_speed_pct, m_max_speed_pct);
+    }  // Method to get the motor speed percentage

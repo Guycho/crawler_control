@@ -1,15 +1,22 @@
+#include <Chrono.h>
+
+#include "coilover_adjuster.h"
 #include "config.h"
+#include "control.h"
 #include "input.h"
 #include "mav_bridge.h"
 #include "steering_motor.h"
 #include "wheel_motor.h"
-#include "coilover_adjuster.h"
 
+Chrono print_timer;
 WheelMotor wheel_motors[Config::num_wheels];
 SteeringMotor steering_motors[Config::num_steering];
 CoiloverAdjuster coilover_adjusters[Config::num_coilover];
 MavBridge mav_bridge;
+Control control;
 void setup() {
+    Serial.begin(9600);
+    print_timer.start();
     for (uint8_t i = 0; i < Config::num_wheels; i++) {
         WheelMotorConfig wheel_motor_config;
         wheel_motor_config.motor_config.pin = Config::Esc::Wheel::pin[i];
@@ -40,7 +47,8 @@ void setup() {
         coilover_adjuster_config.max_pulse = Config::Esc::Coilover::max_pulse[i];
         coilover_adjuster_config.reverse = Config::Coilover::reverse[i];
         coilover_adjuster_config.controller_config.Kp = Config::Coilover::Controller::Kp[i];
-        coilover_adjuster_config.controller_config.max_output = Config::Coilover::Controller::max_output[i];
+        coilover_adjuster_config.controller_config.max_output =
+          Config::Coilover::Controller::max_output[i];
         coilover_adjusters[i].init(coilover_adjuster_config);
     }
 
@@ -58,7 +66,46 @@ void setup() {
     mav_config.is_alive_timeout = Config::MavlinkBridge::is_alive_timeout;
     mav_bridge.init(mav_config);
 
-
+    ControlConfig control_config;
+    for (uint8_t i = 0; i < Config::num_wheels; i++) {
+        control_config.wheel_motors[i] = &wheel_motors[i];
+    }
+    for (uint8_t i = 0; i < Config::num_steering; i++) {
+        control_config.steering_motors[i] = &steering_motors[i];
+    }
+    for (uint8_t i = 0; i < Config::num_coilover; i++) {
+        control_config.coilover_adjusters[i] = &coilover_adjusters[i];
+    }
+    control_config.mav_bridge = &mav_bridge;
+    control.init(control_config);
 }
 
-void loop() {}
+void loop() {
+    control.run();
+    if (print_timer.hasPassed(500, true)) {
+        // Serial.print("FR steering: ");
+        // Serial.print(steering_motors[FR].getDesAngle());
+        // Serial.print(" RR steering: ");
+        // Serial.print(steering_motors[RR].getDesAngle());
+        // Serial.print(" RL steering: ");
+        // Serial.print(steering_motors[RL].getDesAngle());
+        // Serial.print(" FL steering: ");
+        // Serial.print(steering_motors[FL].getDesAngle());
+        // Serial.print(" FR speed: ");
+        // Serial.print(wheel_motors[FR].getSpeedPct());
+        // Serial.print(" RR speed: ");
+        // Serial.print(wheel_motors[RR].getSpeedPct());
+        // Serial.print(" RL speed: ");   
+        // Serial.print(wheel_motors[RL].getSpeedPct());
+        // Serial.print(" FL speed: ");
+        // Serial.println(wheel_motors[FL].getSpeedPct());
+        // Serial.print(" arm: ");
+        // Serial.print(control.get_arm_enabled());
+        // Serial.print(" steering mode: ");
+        // Serial.print(control.get_steering_mode());
+        // Serial.print(" throttle mode: ");
+        // Serial.print(control.get_throttle_mode());
+        // Serial.print(" coilover mode: ");
+        // Serial.println(control.get_coilover_mode());
+    }
+}

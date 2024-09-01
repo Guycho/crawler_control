@@ -16,6 +16,7 @@ class BrushedMotor {
 
     void init(const BrushedMotorConfig &config);   // Method to start the motor
     void setMicroSeconds(uint16_t micro_seconds);  // Method to set the motor speed
+    uint16_t getMicroSeconds();                    // Method to get the motor speed
 
    private:
     Servo m_servo_output;  // Variable to store the motor

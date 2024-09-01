@@ -32,3 +32,5 @@ void CoiloverAdjuster::run(float diff) {
     m_current_pos = m_base_pos + output;
     set_pos(m_current_pos + m_base_pos);  // Setting the coilover position
 }  // Method to run the coilover adjuster
+
+float CoiloverAdjuster::get_pos() { return m_current_pos; }  // Method to get the coilover position
