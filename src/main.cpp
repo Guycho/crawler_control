@@ -98,14 +98,19 @@ void loop() {
         // Serial.print(" RL speed: ");   
         // Serial.print(wheel_motors[RL].getSpeedPct());
         // Serial.print(" FL speed: ");
-        // Serial.println(wheel_motors[FL].getSpeedPct());
+        // Serial.print(wheel_motors[FL].getSpeedPct());
         // Serial.print(" arm: ");
         // Serial.print(control.get_arm_enabled());
         // Serial.print(" steering mode: ");
         // Serial.print(control.get_steering_mode());
+        // Serial.print(" steering: ");
+        // Serial.print(control.get_steering());
         // Serial.print(" throttle mode: ");
         // Serial.print(control.get_throttle_mode());
+        // Serial.print(" throttle: ");
+        // Serial.print(control.get_throttle());
         // Serial.print(" coilover mode: ");
         // Serial.println(control.get_coilover_mode());
+        // Serial.println();
     }
 }

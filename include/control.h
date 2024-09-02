@@ -38,6 +38,8 @@ class Control {
     uint8_t get_steering_mode();
     uint8_t get_throttle_mode();
     uint8_t get_coilover_mode();
+    float get_steering();
+    float get_throttle();
 
    private:
     Chrono m_hb_timer;

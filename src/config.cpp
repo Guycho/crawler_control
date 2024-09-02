@@ -3,23 +3,23 @@
 namespace Config {
 namespace Esc {
 namespace Wheel {
-const uint8_t pin[num_wheels] = {2, 4, 5, 12};
+const uint8_t pin[num_wheels] = {5, 8, 10, 11};
 const uint16_t min_pulse[num_wheels] = {1000, 1000, 1000, 1000};
 const uint16_t max_pulse[num_wheels] = {2000, 2000, 2000, 2000};
 }  // namespace Wheel
 namespace Steering {
-const uint8_t pin[num_steering] = {13, 14, 15, 16};
+const uint8_t pin[num_steering] = {12, 13, 14, 15};
 const uint16_t min_pulse[num_steering] = {1000, 1000, 1000, 1000};
 const uint16_t max_pulse[num_steering] = {2000, 2000, 2000, 2000};
 }  // namespace Steering
 namespace Coilover {
-const uint8_t pin[num_coilover] = {17, 18, 19, 21};
+const uint8_t pin[num_coilover] = {16, 17, 18, 20};
 const uint16_t min_pulse[num_coilover] = {1000, 1000, 1000, 1000};
 const uint16_t max_pulse[num_coilover] = {2000, 2000, 2000, 2000};
 }  // namespace Coilover
 }  // namespace Esc
 namespace Encoder {
-const uint8_t pin[num_steering] = {6, 7, 8, 9};
+const uint8_t pin[num_steering] = {36, 39, 34, 35};
 const bool reverse[num_steering] = {false, false, false, false};
 const float offset[num_steering] = {0, 0, 0, 0};
 }  // namespace Encoder

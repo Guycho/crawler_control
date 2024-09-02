@@ -108,11 +108,15 @@ void Control::steering_state_machine_run(bool arm_enabled, float steering, uint8
                 break;
         }
     } else {
-        m_steering_motors[FR].setAngle(0);
-        m_steering_motors[FL].setAngle(0);
-        m_steering_motors[RR].setAngle(0);
-        m_steering_motors[RL].setAngle(0);
+        m_steering_motors[FR].stop();
+        m_steering_motors[FL].stop();
+        m_steering_motors[RR].stop();
+        m_steering_motors[RL].stop();
     }
+    m_steering_motors[FR].run();
+    m_steering_motors[FL].run();
+    m_steering_motors[RR].run();
+    m_steering_motors[RL].run();
 }
 void Control::throttle_state_machine_run(bool arm_enabled, float throttle, uint8_t throttle_mode) {
     if (arm_enabled) {
@@ -187,3 +191,5 @@ bool Control::get_arm_enabled() { return m_arm_enabled; }
 uint8_t Control::get_steering_mode() { return m_steering_mode; }
 uint8_t Control::get_throttle_mode() { return m_throttle_mode; }
 uint8_t Control::get_coilover_mode() { return m_coilover_mode; }
+float Control::get_steering() { return m_steering; }
+float Control::get_throttle() { return m_throttle; }
