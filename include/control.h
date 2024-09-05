@@ -9,7 +9,8 @@
 #include "steering_motor.h"
 #include "wheel_motor.h"
 
-using RollPitch = Utils::Calcs::RollPitch;
+using RollPitch = Utils::Structs::RollPitch;
+using FourValues = Utils::Structs::FourValues;
 
 enum SteeringMode { ALL = 0, FRONT = 1, REAR = 2, CRAB = 3, S_PIVOT = 4 };
 enum ThrottleMode { AWD = 0, FWD = 1, RWD = 2, T_PIVOT = 3 };
@@ -21,6 +22,7 @@ struct ControlConfig {
     WheelMotor *wheel_motors[Config::num_wheels];
     CoiloverAdjuster *coilover_adjusters[Config::num_coilover];
     MavBridge *mav_bridge;
+    float pivot_steering_angle;
 };
 
 class Control {
@@ -38,8 +40,9 @@ class Control {
     uint8_t get_steering_mode();
     uint8_t get_throttle_mode();
     uint8_t get_coilover_mode();
-    float get_steering();
-    float get_throttle();
+    FourValues get_steering_values();
+    FourValues get_throttle_values();
+    FourValues get_coilover_values();
 
    private:
     Chrono m_hb_timer;
@@ -72,6 +75,7 @@ class Control {
     float m_throttle = 0;
     float m_steering = 0;
     float m_ride_height = 0;
+    float m_pivot_steering_angle = 0;
 };
 
 #endif  // CONTROL_H

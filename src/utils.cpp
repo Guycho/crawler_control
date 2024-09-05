@@ -25,7 +25,7 @@ float calc_dead_band(float x, float max_output, float dead_band) {
 }
 float milli_to_single(float x) { return x / 1e3; }
 float rad_to_deg(float x) { return x * 180 / PI; }
-RollPitch rotateRollPitch45Degrees(RollPitch roll_pitch) {
+Utils::Structs::RollPitch rotateRollPitch45Degrees(Utils::Structs::RollPitch roll_pitch) {
     const float angle = M_PI / 4;  // 45 degrees in radians
 
     // Roll (x-axis) rotation matrix
@@ -58,8 +58,9 @@ RollPitch rotateRollPitch45Degrees(RollPitch roll_pitch) {
     }
 
     // Return the new roll and pitch values
-    RollPitch return_roll_pitch = {output[0], output[1]};
+    Utils::Structs::RollPitch return_roll_pitch = {output[0], output[1]};
     return return_roll_pitch;
 }
+float calc_hypotenuse_angle(float a, float b) { return atan2(b, a); }
 }  // namespace Calcs
 }  // namespace Utils

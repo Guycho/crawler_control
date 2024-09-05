@@ -4,6 +4,9 @@
 #include <Arduino.h>
 
 namespace Config {
+const float width = 0.5;
+const float length = 0.5;
+const float right_angle = 90;
 const uint8_t num_wheels = 4;
 const uint8_t num_steering = 4;
 const uint8_t num_coilover = 4;

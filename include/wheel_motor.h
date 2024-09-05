@@ -23,6 +23,7 @@ class WheelMotor {
     BrushedMotor m_motor;  // Variable to store the motor
 
     float m_max_speed_pct;  // Variable to store the motor max speed
+    float m_speed_pct;      // Variable to store the motor speed percentage
     uint16_t m_max_pulse;
     uint16_t m_min_pulse;
     

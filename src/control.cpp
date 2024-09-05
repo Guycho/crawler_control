@@ -17,9 +17,11 @@ void Control::init(const ControlConfig &config) {
     }
     m_mav_bridge = *config.mav_bridge;
     m_arm_enabled = false;
-    float m_throttle = 0;
-    float m_steering = 0;
+    m_throttle = 0;
+    m_steering = 0;
+    m_pivot_steering_angle = config.pivot_steering_angle;
 }
+
 void Control::run() {
     m_mav_bridge.run();
     m_inertial_data = m_mav_bridge.get_inertial_data();
@@ -59,6 +61,11 @@ void Control::run() {
             m_ride_height += 0.5;
         } else if (input_data.ride_height_down) {
             m_ride_height -= 0.5;
+        }
+        if (m_steering_mode == S_PIVOT) {
+            m_throttle_mode = T_PIVOT;
+        } else if (m_steering_mode != S_PIVOT && m_throttle_mode == T_PIVOT) {
+            m_throttle_mode = AWD;
         }
         m_hb_timer.restart();
     }
@@ -101,10 +108,10 @@ void Control::steering_state_machine_run(bool arm_enabled, float steering, uint8
                 m_steering_motors[RL].setAngle(steering);
                 break;
             case S_PIVOT:
-                m_steering_motors[FR].setAngle(-45);
-                m_steering_motors[FL].setAngle(45);
-                m_steering_motors[RR].setAngle(45);
-                m_steering_motors[RL].setAngle(-45);
+                m_steering_motors[FR].setAngle(-m_pivot_steering_angle);
+                m_steering_motors[FL].setAngle(m_pivot_steering_angle);
+                m_steering_motors[RR].setAngle(m_pivot_steering_angle);
+                m_steering_motors[RL].setAngle(-m_pivot_steering_angle);
                 break;
         }
     } else {
@@ -191,5 +198,27 @@ bool Control::get_arm_enabled() { return m_arm_enabled; }
 uint8_t Control::get_steering_mode() { return m_steering_mode; }
 uint8_t Control::get_throttle_mode() { return m_throttle_mode; }
 uint8_t Control::get_coilover_mode() { return m_coilover_mode; }
-float Control::get_steering() { return m_steering; }
-float Control::get_throttle() { return m_throttle; }
+FourValues Control::get_steering_values() {
+    FourValues values;
+    values.fr = m_steering_motors[FR].getDesAngle();
+    values.fl = m_steering_motors[FL].getDesAngle();
+    values.rr = m_steering_motors[RR].getDesAngle();
+    values.rl = m_steering_motors[RL].getDesAngle();
+    return values;
+}
+FourValues Control::get_throttle_values() {
+    FourValues values;
+    values.fr = m_wheel_motors[FR].getSpeedPct();
+    values.fl = m_wheel_motors[FL].getSpeedPct();
+    values.rr = m_wheel_motors[RR].getSpeedPct();
+    values.rl = m_wheel_motors[RL].getSpeedPct();
+    return values;
+}
+FourValues Control::get_coilover_values() {
+    FourValues values;
+    values.fr = m_coilover_adjusters[FR].get_pos();
+    values.fl = m_coilover_adjusters[FL].get_pos();
+    values.rr = m_coilover_adjusters[RR].get_pos();
+    values.rl = m_coilover_adjusters[RL].get_pos();
+    return values;
+}

@@ -3,19 +3,27 @@
 
 #include <Arduino.h>
 
-
 namespace Utils {
-namespace Calcs {
+namespace Structs {
+struct FourValues {
+    float fr;
+    float fl;
+    float rr;
+    float rl;
+};
 struct RollPitch {
     float roll;
     float pitch;
 };
+}  // namespace Structs
+namespace Calcs {
 float map_float(float x, float in_min, float in_max, float out_min, float out_max);
 float constrain_float(float x, float min, float max);
 float calc_dead_band(float x, float max_output, float dead_band);
 float milli_to_single(float x);
 float rad_to_deg(float x);
-RollPitch rotateRollPitch45Degrees(RollPitch roll_pitch);
+float calc_hypotenuse_angle(float a, float b);
+Utils::Structs::RollPitch rotateRollPitch45Degrees(Utils::Structs::RollPitch roll_pitch);
 }  // namespace Calcs
-}  // namespace utils
+}  // namespace Utils
 #endif  // UTILS_H

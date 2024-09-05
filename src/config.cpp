@@ -3,17 +3,17 @@
 namespace Config {
 namespace Esc {
 namespace Wheel {
-const uint8_t pin[num_wheels] = {5, 8, 10, 11};
+const uint8_t pin[num_wheels] = {4, 5, 12, 13};
 const uint16_t min_pulse[num_wheels] = {1000, 1000, 1000, 1000};
 const uint16_t max_pulse[num_wheels] = {2000, 2000, 2000, 2000};
 }  // namespace Wheel
 namespace Steering {
-const uint8_t pin[num_steering] = {12, 13, 14, 15};
+const uint8_t pin[num_steering] = {14, 15, 16, 17};
 const uint16_t min_pulse[num_steering] = {1000, 1000, 1000, 1000};
 const uint16_t max_pulse[num_steering] = {2000, 2000, 2000, 2000};
 }  // namespace Steering
 namespace Coilover {
-const uint8_t pin[num_coilover] = {16, 17, 18, 20};
+const uint8_t pin[num_coilover] = {18, 19, 21, 22};
 const uint16_t min_pulse[num_coilover] = {1000, 1000, 1000, 1000};
 const uint16_t max_pulse[num_coilover] = {2000, 2000, 2000, 2000};
 }  // namespace Coilover

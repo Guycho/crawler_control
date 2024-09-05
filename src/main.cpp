@@ -1,6 +1,7 @@
 #include <Chrono.h>
 
 #include "coilover_adjuster.h"
+#include "utils.h"
 #include "config.h"
 #include "control.h"
 #include "input.h"
@@ -77,40 +78,14 @@ void setup() {
         control_config.coilover_adjusters[i] = &coilover_adjusters[i];
     }
     control_config.mav_bridge = &mav_bridge;
+    control_config.pivot_steering_angle = Utils::Calcs::calc_hypotenuse_angle(Config::width,
+      Config::length) + Config::right_angle;
     control.init(control_config);
 }
 
 void loop() {
     control.run();
     if (print_timer.hasPassed(500, true)) {
-        // Serial.print("FR steering: ");
-        // Serial.print(steering_motors[FR].getDesAngle());
-        // Serial.print(" RR steering: ");
-        // Serial.print(steering_motors[RR].getDesAngle());
-        // Serial.print(" RL steering: ");
-        // Serial.print(steering_motors[RL].getDesAngle());
-        // Serial.print(" FL steering: ");
-        // Serial.print(steering_motors[FL].getDesAngle());
-        // Serial.print(" FR speed: ");
-        // Serial.print(wheel_motors[FR].getSpeedPct());
-        // Serial.print(" RR speed: ");
-        // Serial.print(wheel_motors[RR].getSpeedPct());
-        // Serial.print(" RL speed: ");   
-        // Serial.print(wheel_motors[RL].getSpeedPct());
-        // Serial.print(" FL speed: ");
-        // Serial.print(wheel_motors[FL].getSpeedPct());
-        // Serial.print(" arm: ");
-        // Serial.print(control.get_arm_enabled());
-        // Serial.print(" steering mode: ");
-        // Serial.print(control.get_steering_mode());
-        // Serial.print(" steering: ");
-        // Serial.print(control.get_steering());
-        // Serial.print(" throttle mode: ");
-        // Serial.print(control.get_throttle_mode());
-        // Serial.print(" throttle: ");
-        // Serial.print(control.get_throttle());
-        // Serial.print(" coilover mode: ");
-        // Serial.println(control.get_coilover_mode());
-        // Serial.println();
+        Serial.println();
     }
 }
