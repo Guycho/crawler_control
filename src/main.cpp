@@ -1,12 +1,12 @@
 #include <Chrono.h>
 
 #include "coilover_adjuster.h"
-#include "utils.h"
 #include "config.h"
 #include "control.h"
 #include "input.h"
 #include "mav_bridge.h"
 #include "steering_motor.h"
+#include "utils.h"
 #include "wheel_motor.h"
 
 Chrono print_timer;
@@ -78,8 +78,9 @@ void setup() {
         control_config.coilover_adjusters[i] = &coilover_adjusters[i];
     }
     control_config.mav_bridge = &mav_bridge;
-    control_config.pivot_steering_angle = Utils::Calcs::calc_hypotenuse_angle(Config::width,
-      Config::length) + Config::right_angle;
+    control_config.pivot_steering_angle =
+      Utils::Calcs::calc_hypotenuse_angle(Config::width / 2, Config::length / 2) +
+      Config::right_angle;
     control.init(control_config);
 }
 
