@@ -11,7 +11,11 @@ void CoiloverAdjuster::init(const CoiloverAdjusterConfig &config) {
       m_max_pulse);  // Attaching the motor to the pin and setting the min and max pulse
     m_servo_output.writeMicroseconds(m_mid_pulse);  // Setting the coilover position to 0
     m_reverse = config.reverse;
-    m_controller.init(config.controller_config);  // Initializing the controller
+    m_min_speed = config.min_speed;
+    m_max_speed = config.max_speed;
+    m_current_pos = 0;
+    m_speed = 0;
+    m_timer.start();
 }  // Method to start the coilover adjuster
 
 void CoiloverAdjuster::set_pos(float pos) {
@@ -19,18 +23,28 @@ void CoiloverAdjuster::set_pos(float pos) {
     if (m_reverse) {
         micro_seconds = m_max_pulse - micro_seconds + m_min_pulse;
     }
+    micro_seconds = Utils::Calcs::constrain_float(micro_seconds, m_min_pulse, m_max_pulse);
     m_servo_output.writeMicroseconds(micro_seconds);  // Setting the coilover position
+    m_current_pos = pos;
 }  // Method to set the coilover position
+void CoiloverAdjuster::set_speed(float speed) {
+    m_speed = Utils::Calcs::map_float(speed, -100, 100, m_min_speed, m_max_speed);
+    m_speed = Utils::Calcs::constrain_float(m_speed, m_min_speed, m_max_speed);
+
+}  // Method to set the coilover speed
 
 void CoiloverAdjuster::reset() { set_pos(0); }  // Method to reset the coilover position
 
-void CoiloverAdjuster::set_base_pos(float pos) {
-    m_base_pos = pos;  // Setting the base position of the coilover
-}
-void CoiloverAdjuster::run(float diff) {
-    float output = m_controller.calculateOutput(diff);  // Running the controller
-    m_current_pos = m_base_pos + output;
-    set_pos(m_current_pos + m_base_pos);  // Setting the coilover position
+void CoiloverAdjuster::run() {
+    if(m_speed == 0 ) {
+        m_timer.restart();
+        return;
+    }
+    uint16_t elapsed = m_timer.elapsed();
+    uint16_t steps = m_speed * (elapsed / 1e3);
+    if (steps != 0) {
+        m_timer.restart();
+        float new_pos = m_current_pos + steps;
+        set_pos(new_pos);
+    }
 }  // Method to run the coilover adjuster
-
-float CoiloverAdjuster::get_pos() { return m_current_pos; }  // Method to get the coilover position

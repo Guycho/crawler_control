@@ -23,6 +23,8 @@ float calc_dead_band(float x, float max_output, float dead_band);
 float milli_to_single(float x);
 float rad_to_deg(float x);
 float calc_hypotenuse_angle(float a, float b);
+float calc_shock_travel(float alpha, float a, float b);
+float calc_alpha(float a, float b, float c);
 Utils::Structs::RollPitch rotateRollPitch45Degrees(Utils::Structs::RollPitch roll_pitch);
 }  // namespace Calcs
 }  // namespace Utils

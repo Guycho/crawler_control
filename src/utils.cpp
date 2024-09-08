@@ -62,5 +62,15 @@ Utils::Structs::RollPitch rotateRollPitch45Degrees(Utils::Structs::RollPitch rol
     return return_roll_pitch;
 }
 float calc_hypotenuse_angle(float a, float b) { return atan2(b, a); }
+float calc_shock_travel(float alpha, float a, float b) {
+    // Using the Law of Cosines to calculate the length of side C
+    float c = sqrt(a * a + b * b - 2 * a * b * cos(alpha));
+    return c;
+}
+float calc_alpha(float a, float b, float c) {
+    // Using the Law of Cosines to calculate the angle alpha
+    float alpha = acos((a * a + b * b - c * c) / (2 * a * b));
+    return alpha;
+}
 }  // namespace Calcs
 }  // namespace Utils

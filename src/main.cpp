@@ -8,11 +8,17 @@
 #include "steering_motor.h"
 #include "utils.h"
 #include "wheel_motor.h"
+#include "wheel_motors_logic.h"
+#include "steering_motors_logic.h"
+#include "coilover_adjusters_logic.h"
 
 Chrono print_timer;
 WheelMotor wheel_motors[Config::num_wheels];
 SteeringMotor steering_motors[Config::num_steering];
 CoiloverAdjuster coilover_adjusters[Config::num_coilover];
+WheelMotorsLogic wheel_motors_logic;
+SteeringMotorsLogic steering_motors_logic;
+CoiloverAdjustersLogic coilover_adjusters_logic;
 MavBridge mav_bridge;
 Control control;
 void setup() {
@@ -67,20 +73,30 @@ void setup() {
     mav_config.is_alive_timeout = Config::MavlinkBridge::is_alive_timeout;
     mav_bridge.init(mav_config);
 
-    ControlConfig control_config;
+    WheelMotorsLogicConfig wheel_motors_logic_config;
     for (uint8_t i = 0; i < Config::num_wheels; i++) {
-        control_config.wheel_motors[i] = &wheel_motors[i];
+        wheel_motors_logic_config.wheel_motors[i] = &wheel_motors[i];
     }
+    wheel_motors_logic.init(wheel_motors_logic_config);
+    SteeringMotorsLogicConfig steering_motors_logic_config;
     for (uint8_t i = 0; i < Config::num_steering; i++) {
-        control_config.steering_motors[i] = &steering_motors[i];
+        steering_motors_logic_config.steering_motors[i] = &steering_motors[i];
     }
-    for (uint8_t i = 0; i < Config::num_coilover; i++) {
-        control_config.coilover_adjusters[i] = &coilover_adjusters[i];
-    }
-    control_config.mav_bridge = &mav_bridge;
-    control_config.pivot_steering_angle =
+    steering_motors_logic_config.pivot_steering_angle =
       Utils::Calcs::calc_hypotenuse_angle(Config::width / 2, Config::length / 2) +
       Config::right_angle;
+    steering_motors_logic.init(steering_motors_logic_config);
+    CoiloverAdjustersLogicConfig coilover_adjusters_logic_config;
+    for (uint8_t i = 0; i < Config::num_coilover; i++) {
+        coilover_adjusters_logic_config.CoiloverAdjusters[i] = &coilover_adjusters[i];
+    }
+    coilover_adjusters_logic.init(coilover_adjusters_logic_config);
+
+    ControlConfig control_config;
+    control_config.steering_motors_logic = &steering_motors_logic;
+    control_config.wheel_motors_logic = &wheel_motors_logic;
+    control_config.coilover_adjusters_logic = &coilover_adjusters_logic;
+    control_config.mav_bridge = &mav_bridge;
     control.init(control_config);
 }
 

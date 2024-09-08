@@ -3,6 +3,8 @@
 
 #include <Arduino.h>
 
+enum Positions { FR = 0, RR = 1, RL = 2, FL = 3 };
+
 namespace Config {
 const float width = 0.5;
 const float length = 0.5;
