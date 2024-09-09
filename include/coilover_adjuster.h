@@ -22,6 +22,7 @@ class CoiloverAdjuster {
 
     void init(const CoiloverAdjusterConfig &config);
     void set_speed(float speed);
+    void set_speed_offset(float offset);
     void reset();
     void run();
 
@@ -37,6 +38,7 @@ class CoiloverAdjuster {
     bool m_reverse;
     float m_current_pos;
     float m_speed; //steps per second
+    float m_speed_offset;
     float m_min_speed;
     float m_max_speed;
 };

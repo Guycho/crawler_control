@@ -30,6 +30,5 @@ float GroundSensor::get_distance() {
     return m_distance;
 }
 
-bool GroundSensor::get_ground_contact() {
-    return m_distance < m_max_distance;
-}
+float GroundSensor::get_max_distance() { return m_max_distance; }
+float GroundSensor::get_min_distance() { return m_min_distance; }

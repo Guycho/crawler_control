@@ -34,12 +34,17 @@ class CoiloverAdjustersLogic {
 
 
     void keep_contact();
+    void run_coilover_adjusters();
+
     static constexpr CoiloverMode coilover_modes[] = {OFF, STABILIZE, KEEP_CONTACT, RIDE_HEIGHT};
     static constexpr uint8_t NUM_COILOVER_MODES =
       sizeof(coilover_modes) / sizeof(coilover_modes[0]);
     
     float m_shock_lengths[Config::num_wheels];
     bool m_ground_contact[Config::num_wheels];
+    float m_shock_min_length[Config::num_wheels];
+    float m_shock_max_length[Config::num_wheels];
+    float m_coilover_adjusters_speed[Config::num_wheels];
 };
 
 #endif  // WHEEL_MOTORS_LOGIC_H

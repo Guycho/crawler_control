@@ -22,8 +22,8 @@ class GroundSensor {
 
     void init(const GroundSensorConfig &config);
     float get_distance();
-    bool get_ground_contact();
-
+    float get_max_distance();
+    float get_min_distance();
    private:
     uint8_t m_pin;
     bool m_reverse;

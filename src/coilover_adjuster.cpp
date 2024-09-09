@@ -28,20 +28,26 @@ void CoiloverAdjuster::set_pos(float pos) {
     m_current_pos = pos;
 }  // Method to set the coilover position
 void CoiloverAdjuster::set_speed(float speed) {
-    m_speed = Utils::Calcs::map_float(speed, -100, 100, m_min_speed, m_max_speed);
-    m_speed = Utils::Calcs::constrain_float(m_speed, m_min_speed, m_max_speed);
+    m_speed = Utils::Calcs::constrain_float(speed, -100, 100);
 
 }  // Method to set the coilover speed
+void CoiloverAdjuster::reset() {
+    set_pos(0);
+    set_speed(0);
+}  // Method to reset the coilover position
 
-void CoiloverAdjuster::reset() { set_pos(0); }  // Method to reset the coilover position
-
+void CoiloverAdjuster::set_speed_offset(float offset) {
+    m_speed_offset = Utils::Calcs::constrain_float(m_speed + offset, m_min_speed, m_max_speed);
+}  // Method to set the coilover speed offset
 void CoiloverAdjuster::run() {
-    if(m_speed == 0 ) {
+    uint16_t comb_speed = Utils::Calcs::constrain_float(
+      Utils::Calcs::map_float(m_speed + m_speed_offset, -100, 100, m_min_speed, m_max_speed));
+    if (comb_speed == 0) {
         m_timer.restart();
         return;
     }
     uint16_t elapsed = m_timer.elapsed();
-    uint16_t steps = m_speed * (elapsed / 1e3);
+    uint16_t steps = comb_speed * (elapsed / 1e3);
     if (steps != 0) {
         m_timer.restart();
         float new_pos = m_current_pos + steps;
